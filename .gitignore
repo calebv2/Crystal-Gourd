@@ -1,0 +1,9 @@
+/bin/
+/Unity/Build/
+/Unity/Library/
+/Unity/Logs/
+/Unity/Temp/
+/Unity/UserSettings/
+/Unity/obj/
+/Unity/Assets/CrystalGourd/Generated*
+/Unity/Assets/CrystalGourd/Models/*.png*
