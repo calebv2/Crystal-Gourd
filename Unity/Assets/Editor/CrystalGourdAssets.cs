@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Object = UnityEngine.Object;
 
 public static class CrystalGourdAssets
@@ -27,6 +28,16 @@ public static class CrystalGourdAssets
         if (crystal.mainTexture == null) throw new InvalidOperationException("Native blue crystal texture is missing");
         crystal.mainTextureOffset = new Vector2(10f / 256f, 10f / 256f);
         crystal.mainTextureScale = Vector2.one * (236f / 256f);
+        var shell = new Material(crystal) { name = "Translucent crystal shell", renderQueue = 3050 };
+        shell.SetOverrideTag("RenderType", "Transparent");
+        shell.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
+        shell.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha);
+        shell.SetFloat("_ZWrite", 0);
+        shell.SetFloat("_Cull", (float)CullMode.Back);
+        shell.SetFloat("_Opacity", .68f);
+        shell.SetFloat("_Specular", .22f);
+        shell.SetFloat("_Shininess", 32f);
+        shell = SaveAsset(shell, Generated + "/Translucent crystal shell.mat");
         var metal = Material("Dark steel frame", Color.white, false);
         metal.mainTexture = LoadTexture("MetalPanels_diffuse");
         metal.SetFloat("_Specular", .56f);
@@ -55,7 +66,7 @@ public static class CrystalGourdAssets
             for (int chamber=0; chamber<gems.Length; chamber++)
             {
                 var mesh=Save(MakeMesh(new[]{gems[chamber]},Vector3.zero,true),"Crystal_"+i+"_"+chamber);
-                Display(detail,"Chamber "+chamber,mesh,crystal);
+                Display(detail,"Chamber "+chamber,mesh,shell);
                 if (i==0) Display(recipe,"Gem "+chamber,mesh,crystal);
             }
             var frame=nodes.Where(n=>!n.name.StartsWith("Cork",StringComparison.Ordinal)&&!n.name.StartsWith("crystal_gem",StringComparison.Ordinal)&&!n.name.StartsWith("crystal_liquid",StringComparison.Ordinal));

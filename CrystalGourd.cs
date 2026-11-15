@@ -18,7 +18,7 @@ using UnityEngine;
 using UnityEngine.XR;
 using Object = UnityEngine.Object;
 
-[assembly: MelonInfo(typeof(CrystalGourd.Mod), "Crystal Gourd", "1.0.4", "ATT")]
+[assembly: MelonInfo(typeof(CrystalGourd.Mod), "Crystal Gourd", "1.0.5", "ATT")]
 [assembly: MelonGame("Alta", "A Township Tale")]
 [assembly: MelonAdditionalDependencies("SyncLib")]
 
@@ -452,19 +452,19 @@ namespace CrystalGourd
 
     internal static class WorkbenchFinish
     {
-        static readonly Dictionary<GenericCraftingPieceDefinition, MeshRenderer> pieces =
-            new Dictionary<GenericCraftingPieceDefinition, MeshRenderer>();
+        static readonly Dictionary<GenericCraftingPieceDefinition, (Mesh Mesh, Material Finish)> pieces =
+            new Dictionary<GenericCraftingPieceDefinition, (Mesh, Material)>();
         static readonly FieldInfo definition = Mod.Field(typeof(GenericCraftingPiece), "definition");
         static readonly FieldInfo visual = Mod.Field(typeof(GenericCraftingPiece), "mainMeshRenderer");
         static readonly FieldInfo filters = Mod.Field(typeof(GenericCraftingPiece), "meshFilters");
 
         internal static void Register(GenericCraftingRecipe recipe, GameObject art)
         {
-            var body = art.transform.Find("Body/LOD0");
             for (int i = 0; i < recipe.Pieces.Length; i++)
             {
-                var part = body.Find(i == 0 ? "Steel frame" : "Chamber " + (i - 1));
-                pieces.Add(recipe.Pieces[i], part.GetComponent<MeshRenderer>());
+                var bodyPart = art.transform.Find(i == 0 ? "Body/LOD0/Steel frame" : "Body/LOD0/Chamber " + (i - 1));
+                var recipePart = art.transform.Find(i == 0 ? "Recipe/Frame" : "Recipe/Gem " + (i - 1));
+                pieces.Add(recipe.Pieces[i], (bodyPart.GetComponent<MeshFilter>().sharedMesh, recipePart.GetComponent<MeshRenderer>().sharedMaterial));
             }
         }
 
@@ -473,10 +473,9 @@ namespace CrystalGourd
             if (!__instance.IsFilled || !(definition.GetValue(__instance) is GenericCraftingPieceDefinition piece) ||
                 !pieces.TryGetValue(piece, out var artPart)) return;
             var renderer = (MeshRenderer)visual.GetValue(__instance);
-            var mesh = artPart.GetComponent<MeshFilter>().sharedMesh;
             foreach (var filter in (MeshFilter[])filters.GetValue(__instance))
-                filter.sharedMesh = mesh;
-            renderer.sharedMaterial = artPart.sharedMaterial;
+                filter.sharedMesh = artPart.Mesh;
+            renderer.sharedMaterial = artPart.Finish;
         }
 
         internal static void Clear() => pieces.Clear();

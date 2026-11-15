@@ -1,12 +1,14 @@
-# Crystal Gourd 1.0.4
+# Crystal Gourd 1.0.5
 
-The Crystal Gourd is a craftable canteen that holds three servings of water, potions, or other compatible liquids. It stays open while empty. Hold it in one hand and pull the cork with the other when sealed. The cork returns when the filled gourd is stowed or set down.
+The Crystal Gourd is a craftable canteen that holds three servings of water, potions, or other compatible liquids. Its frosted crystal shows the color and fill level of the liquid inside. It stays open while empty. Hold it in one hand and pull the cork with the other when sealed. The cork returns when the filled gourd is stowed or set down.
+
+![Crystal Gourd with two servings of Teleport Potion visible through the crystal](images/crystal-gourd.png)
 
 Carry it in a side belt slot, a backpack storage slot, or a normal shelf slot. To hang it from the backpack's Potion Hoops, bring the gourd's neck to an empty hoop and release it.
 
 ## Install
 
-Download the DLL for your setup from the [Crystal Gourd 1.0.4 release](https://github.com/calebv2/Crystal-Gourd/releases/tag/v1.0.4).
+Download the DLL for your setup from the [Crystal Gourd 1.0.5 release](https://github.com/calebv2/Crystal-Gourd/releases/tag/v1.0.5).
 
 Requires MelonLoader and the same build of SyncLib with `workbench-crafting-v1` on the server and PC clients. This release was tested with SyncLib 1.1.1 carrying that feature.
 
